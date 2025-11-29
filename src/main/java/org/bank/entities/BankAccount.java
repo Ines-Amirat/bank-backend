@@ -11,62 +11,16 @@ import java.util.UUID;
 @Entity
 @Table(name = "bank_accounts")
 public class BankAccount {
-    @Id @GeneratedValue
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Id @GeneratedValue(strategy = GenerationType.UUID)
-    public UUID getId() {
-        return id;
-    }
-
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setBankName(String bankName) {
-        this.bankName = bankName;
-    }
-
-    public void setType(AccountType type) {
-        this.type = type;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    public void setMaskedNumber(String maskedNumber) {
-        this.maskedNumber = maskedNumber;
-    }
-
-    public void setIban(String iban) {
-        this.iban = iban;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
-    }
-
-    public void setCreatedAt(OffsetDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(OffsetDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    @Getter
-    @Column(name="user_id", nullable=false)
-    private UUID userId;
+    // ---------- RELATION MANY-TO-ONE CORRECTE ----------
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserAccount user;
+    // ----------------------------------------------------
 
     @Getter
     @Column(nullable=false, length=120)
@@ -106,7 +60,21 @@ public class BankAccount {
     private OffsetDateTime updatedAt = OffsetDateTime.now();
 
     @PreUpdate
-    void onUpdate(){ this.updatedAt = OffsetDateTime.now(); }
+    void onUpdate(){
+        this.updatedAt = OffsetDateTime.now();
+    }
 
-    // getters/setters …
+    // -------- getters / setters ----------
+    public UUID getId() { return id; }
+
+    public UserAccount getUser() { return user; }
+    public void setUser(UserAccount user) { this.user = user; }
+
+    public void setName(String name) { this.name = name; }
+    public void setBankName(String bankName) { this.bankName = bankName; }
+    public void setType(AccountType type) { this.type = type; }
+    public void setCurrency(String currency) { this.currency = currency; }
+    public void setMaskedNumber(String maskedNumber) { this.maskedNumber = maskedNumber; }
+    public void setIban(String iban) { this.iban = iban; }
+    public void setBalance(BigDecimal balance) { this.balance = balance; }
 }
